@@ -8,13 +8,13 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+@SuppressWarnings("serial")
 public class OptionBar extends JPanel implements ActionListener {
 
 	private JButton sortByNameButton;
 	private JButton filterByDownButton;
 	private JButton sortByTimeResponseButton;
-	private TextFieldUrl textField;
-	private TextPanel textPanel;
+	private TextPanels textPanel;
 	private MainFrameController mainFrame;
 
 	public OptionBar()
@@ -25,8 +25,6 @@ public class OptionBar extends JPanel implements ActionListener {
 		sortByTimeResponseButton = new JButton("Sort by Time Response Server");
 
 		filterByDownButton = new JButton("Show Just Down URL");
-
-		textField = new TextFieldUrl();
 
 		sortByNameButton.addActionListener(this);// to act when you click the button
 
@@ -39,10 +37,10 @@ public class OptionBar extends JPanel implements ActionListener {
 		add(sortByNameButton);
 		add(filterByDownButton);
 		add(sortByTimeResponseButton);
-		add(textField);
+	
 	}
 
-	public void setOptionBar(TextPanel textPanel) {
+	public void setOptionBar(TextPanels textPanel) {
 		this.textPanel = textPanel;
 	}
 
@@ -73,9 +71,4 @@ public class OptionBar extends JPanel implements ActionListener {
 
 	}
 
-	public void setUrlFromField(String url)
-	// get url from field
-	{
-		textField.setUrlFromField(url);
-	}
 }

@@ -6,7 +6,7 @@ import java.net.URL;
 import brokenLinks.WebLinkType.status;
 
 public class LinkTypeBrokenCheck implements LinkTypeAction {
-	// strtTime and endTime are variables to calculate the response of server
+	// startTime and endTime are variables to calculate the response of server
 	private long startTime = 0;
 	private long endTime = 0;
 
@@ -34,12 +34,11 @@ public class LinkTypeBrokenCheck implements LinkTypeAction {
 			endTime = System.currentTimeMillis();// measure time after
 			connection.disconnect();// disconnect from the server
 			if (response.equals("OK") || response.equals(String.valueOf(200))) {// we should trust only the URLs which
-																					// return OK and 200 because the
-																					// broken links
-																					// redirects us usually
+																				// return OK and 200 because the
+																				// broken links
+																				// redirects us usually
 				element.statusLink = status.UP;
 			} else {
-
 				element.statusLink = status.DOWN;
 			}
 

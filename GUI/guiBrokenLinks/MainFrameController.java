@@ -2,7 +2,6 @@ package guiBrokenLinks;
 
 import java.awt.BorderLayout;
 
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
@@ -20,15 +19,16 @@ import brokenLinks.SortListOfLinksByTimeResponse;
 import brokenLinks.SortOnListOfLinksAction;
 import brokenLinks.WebLinkType;
 
-
+@SuppressWarnings("serial")
 public class MainFrameController extends JFrame {
 	private List<WebLinkType> allLinks;
-	private TextPanel textArea;
+	private TextPanels textArea;
 	private OptionBar options;
 	private JButton clickToCheckButton;
 	private FindLinkAction search;
-	public static String url;
+	private String url;
 	private LinkTypeAction isBroken;
+	private ThreadForMainTask newThread;
 
 	public MainFrameController()
 	// constructor
@@ -36,7 +36,7 @@ public class MainFrameController extends JFrame {
 
 		super("Broken Links Checker by Badoi Mircea");// constructor of JFrame
 
-		textArea = new TextPanel();
+		textArea = new TextPanels();
 
 		setLayout(new BorderLayout());
 
@@ -48,7 +48,11 @@ public class MainFrameController extends JFrame {
 
 		clickToCheckButton = new JButton("Click to check URL");
 
-		textArea.addToScreen("WARNING :Click to check URL AND WAIT FOR THE RESULTS \n");
+		textArea.addToScreen(
+				"WARNING :PRESS  Click to check URL  AND WAIT FOR THE RESULTS(UNTIL FINISHED IT IS DISPLAYED) \n YOU MAY NOT PRESS ANY BUTTON UNTIL FINISHED FOR CORRECT RESULTS \n");
+
+		newThread = new ThreadForMainTask();
+		newThread.getClass(this);
 
 		clickToCheckButton.addActionListener(new ActionListener()
 		// action when you click the button
@@ -58,13 +62,14 @@ public class MainFrameController extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					textArea.clear();
-					options.setUrlFromField(url);
-					run();
-					
+					url = textArea.getUrlFromField();
+					Thread myThread = new Thread(newThread);// new thread
+					myThread.start();
+
 				} catch (Exception e1) {
 
-					textArea.addToScreen("ERROR....TRY AGAIN");
-					
+					textArea.addToScreen("ERROR....TRY AGAIN(you may check the URL)");
+
 				}
 
 			}
@@ -77,22 +82,22 @@ public class MainFrameController extends JFrame {
 		add(clickToCheckButton, BorderLayout.SOUTH);
 		setVisible(true);// make the frame visible
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);// stop run of application when you press exit
-		setSize(1100, 800);
+		setSize(900, 600);// size of the up when started
 
 	}
 
 	public void run() throws Exception
 	// run the app(set conditions)
 	{
+	
+		try {
+			
+			search = new FindLinks();
+			allLinks = search.findAllLinks(url);// find the URLs on page
 
-		search = new FindLinks();
-		allLinks = search.findAllLinks(url);// find the URLs on page
+			for (WebLinkType element : allLinks) {// iterate through the list of URLs and check if they are broken or
+													// not
 
-		for (WebLinkType element : allLinks) {// iterate through the list of URLs and check if they are broken or not
-
-			try
-
-			{
 				isBroken = new LinkTypeBrokenCheck();
 
 				isBroken.isLinkBroken(new URL(element.url), element);// status of an URL
@@ -102,34 +107,45 @@ public class MainFrameController extends JFrame {
 				textArea.addToScreen(
 						element.url + "  " + element.statusLink + " " + element.timeResponseServer + " ms\n");
 
-
 				System.out.println("URL: " + element.url + "  " + element.timeResponseServer + " ms" + " status URL: "
 						+ element.statusLink);
 
 			}
+		
 
-			catch (Exception e)
+		catch (Exception e)
 
-			{
-				// error in case of a bad URL
-				
-				System.out.println(" Exception occured -&gt; " + e.getMessage());
+		{
+			// error in case of a bad URL
 
-			}
+			textArea.addToScreen("ERROR....TRY AGAIN");
+			System.out.println(" Exception occured -&gt; " + e.getMessage());
 
+		}
+
+		finally {
+			textArea.addToScreen(" \nFINISHED ");// let the user know when operation completed
+		}
 		}
 
 	}
 
+	
+
 	public void runSortByName()
 	// set the SortByName conditions,run it and add results to textArea
 	{
-		SortOnListOfLinksAction temp = new SortListOfLinksByName();
-		temp.sortBy(allLinks);
+		try {
+			SortOnListOfLinksAction temp = new SortListOfLinksByName();
+			temp.sortBy(allLinks);
 
-		for (WebLinkType it : allLinks) {
-			textArea.addToScreen(it.url + " " + it.statusLink + " " + it.timeResponseServer + " ms\n");
+			for (WebLinkType it : allLinks) {
+				textArea.addToScreen(it.url + " " + it.statusLink + " " + it.timeResponseServer + " ms\n");
+			}
+		} catch (Exception notCheckedFirst) {
+			urlNotChecked();
 		}
+
 	}
 
 	public void runSortByTimeResponseServer()
@@ -137,10 +153,14 @@ public class MainFrameController extends JFrame {
 	// textArea
 	{
 		SortOnListOfLinksAction temp = new SortListOfLinksByTimeResponse();
-		temp.sortBy(allLinks);
+		try {
+			temp.sortBy(allLinks);
 
-		for (WebLinkType it : allLinks) {
-			textArea.addToScreen(it.url + " " + it.timeResponseServer + " ms" + "\n");
+			for (WebLinkType it : allLinks) {
+				textArea.addToScreen(it.url + " " + it.timeResponseServer + " ms" + "\n");
+			}
+		} catch (Exception notCheckedFirst) {
+			urlNotChecked();
 		}
 
 	}
@@ -149,15 +169,22 @@ public class MainFrameController extends JFrame {
 	//// set the filterByLinkByDown conditions,run it and add results to textArea
 	{
 		FilterListOfLinksByAction temp = new FilterListOfLinksByDown();
-		List<WebLinkType> filtered = temp.filterBy(allLinks);
-
-		if (filtered.isEmpty()) {
-			textArea.addToScreen("NO BROKEN LINKS\n");
-		} else {
-			for (WebLinkType it : filtered) {
-				textArea.addToScreen(it.url + "\n");
+		try {
+			List<WebLinkType> filtered = temp.filterBy(allLinks);
+			if (filtered.isEmpty()) {
+				textArea.addToScreen("NO BROKEN LINKS\n");
+			} else {
+				for (WebLinkType it : filtered) {
+					textArea.addToScreen(it.url + "\n");
+				}
 			}
+		} catch (Exception notCheckedFirst) {
+			urlNotChecked();
 		}
+	}
+
+	public void urlNotChecked() {
+		textArea.addToScreen("First you need to check an URL");
 	}
 
 }

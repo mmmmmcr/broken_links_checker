@@ -39,6 +39,7 @@ public class SortListByTimeResponseTest {
 		actual = new ArrayList<Integer>();
 	}
 
+	@SuppressWarnings("serial")
 	@Parameters
 	// parameters(input and output)for automate tests
 	public static Collection<Object[]> data() {

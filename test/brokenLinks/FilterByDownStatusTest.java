@@ -2,11 +2,10 @@ package brokenLinks;
 
 import static org.junit.Assert.*;
 
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,6 +42,7 @@ public class FilterByDownStatusTest {
 		actualStatusOutputConvertedToArrayList = new ArrayList<status>();
 	}
 
+	@SuppressWarnings("serial")
 	@Parameters
 	// parameters(input and output)for automate tests
 	public static Collection<Object[]> data() {

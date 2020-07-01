@@ -9,6 +9,6 @@
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="GUI"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="C:/Users/bmami/Downloads/jsoup-1.13.1.jar"/>
+	<classpathentry kind="lib" path="library/jsoup-1.13.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

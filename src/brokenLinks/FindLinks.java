@@ -1,8 +1,9 @@
 package brokenLinks;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -18,19 +19,19 @@ public class FindLinks implements FindLinkAction {
 	// function which returns the URLs of the page as an ArrayList
 	{
 
-		Set<String> result = new LinkedHashSet<String>();
+		Set<String> result = new HashSet<String>();//in case we find the same URL twice or more times
 
 		Document downloadedHtml = Jsoup.connect(url).get();
-		Elements links = downloadedHtml.select("a[href]");//select links (a href in HTML)
-		Elements media = downloadedHtml.select("[src]");//select media
+		Elements linksList = downloadedHtml.select("a[href]");// select links (a href in HTML)
+		Elements linksMedia = downloadedHtml.select("[src]");// select media
 
-		// links  
-		for (Element link : links) {
+		// links
+		for (Element link : linksList) {
 			result.add(link.attr("abs:href"));
 		}
 
 		// images
-		for (Element src : media) {
+		for (Element src : linksMedia) {
 			result.add(src.attr("abs:src"));
 		}
 

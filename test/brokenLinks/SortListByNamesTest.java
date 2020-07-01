@@ -38,6 +38,7 @@ public class SortListByNamesTest {
 		actualConvertedToArrayList = new ArrayList<String>();
 	}
 
+	@SuppressWarnings("serial")
 	@Parameters
 	// parameters(input and output)for automate tests
 	public static Collection<Object[]> data() {

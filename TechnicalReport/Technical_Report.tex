@@ -1,0 +1,154 @@
+\documentclass[11pt,leqno]{article}
+\usepackage{color,graphicx,listings}
+\usepackage{epstopdf}
+\usepackage{amsfonts,amssymb,amsmath,amsthm,latexsym}
+\usepackage{url}
+
+
+
+\renewcommand{\baselinestretch}{1.00}
+\hoffset=-1.1in\voffset=-1.55cm\setlength{\textwidth}{17cm}
+\setlength{\textheight}{22,5cm}
+\parskip 2ex
+\parsep 1ex
+\itemsep 1ex
+\parindent 1.7mm
+
+
+\begin{document}
+\pagestyle{plain}
+
+\title{Broken Links Documentation}
+\author{Badoi Mircea Aurelian}
+
+\maketitle
+
+\newpage
+
+\section{Problem Statement}\label{sec_ps}
+Design an application which takes an URL and displays all the links found on the page. Application could also shows a sorted list alphabetically of the links, a sorted list by time response and as well as filters the link by status DOWN(broken).
+\vspace{20mm}
+
+\section{Problem Solving}
+In order to find the broken links, we have followed the next steps:\\
+-collect the links found on the given page\\
+-send request to the server for all links found and read the response code\\
+-based on response from server, the links are categorized by DOWN or UP
+
+
+\vspace{5mm}
+For sorting we use sort method of ArrayList by writing a comparator which suits our needs.\\
+
+\vspace{0.5mm}
+Filtering it is just a traverse of the list of links. We keep just the links with status DOWN.
+\newpage
+
+
+\setlength{\parindent}{4em}
+\section{Application outline}
+\vspace{5mm}
+\subsection{The high level architectural overview of the application}
+Application is divided in 3 main folders.\\
+-first one (src) contains the interfaces and classes for solving the requirements\\
+-the second one (test) has the JUnit Tests for:\par 				-FilterListOfLinksByDown class\par 
+-LinkTypeBrokenCheck class\par 
+-SortListOfLinksByName class\par 
+-SortListOfLinksByTimeResponse class.\\
+-the third one (GUI) where we build the interface with the user using Java Swing. It also contains MainFrameController class which controls the app.  
+\vspace{5mm}
+\subsection{The specification of the input data format}
+Input data is given by the user as a valid URL. In case of an invalid link, the application displays "ERROR...TRY AGAIN".
+\vspace{5mm}
+\subsection{The specification of the output data format}
+The output represent a list of outgoing links, the time response and the status of them.
+\vspace{5mm}
+\newpage
+\subsection{The list of all the files in the application and their description}
+Classes and Interfaces:\\
+-src folder:\par
+-WebLinkType class it's a type of data. It is composed of an enum status (statusLink), a string (url) and an int(timeResponseServer)\par
+-FilterListOfLinksByAction interface has one function filterBy\par
+-FilterListOfLinksByDown implements the upper interface. Function filterBy takes a list of WebLinkType and returns an ArrayList with the DOWN links\par
+-FindLinkAction interface has one function findAllLinks\par
+-FindLinks implements the interface FindLinkAction. Function findAllLinks takes a String and returns an ArrayList of URLs found on a page(for this we use JSoup).\par
+-LinkTypeAction interface has two functions, isLinkBroken and responseTimeServer\par
+-LinkTypeBrokenCheck implements LinkTypeAction. Function isLinkBroken takes an URL type element and a WebLinkType, try to connect to the server, acknowledge the response and set the status of WebLinkType element.\par 
+-SortOnListOfLinksAction interface has one function sortBy.\par
+-SortListOfLinksByName implements SortOnListOfLinksAction. Function sortBy takes a list and sort alphabetically it.\par
+-SortListOfLinksByTimeResponse implements SortOnListOfLinksAction. Function sortBy takes a list and sort by time response it.\\
+-test folder:\par
+-FilterByDownStatusTest class\par 
+-LinkTypeBrokenCheckTest class\par 
+-SortListByNamesTest class\par 
+-SortListByTimeResponseTest class.\\
+-GUI folder:\par
+-Main class\par
+-MainFrameController class set the preconditions of the program and build the necessary components of app\par
+-OptionBar class makes the tool bar with three buttons, two for sorting and one to filter. It contains also a text field where you introduced the URL\par
+-TextFieldUrl class contains the text field of the tool bar\par
+-TextPanel class represents the display area of the app\\
+
+\vspace{10mm}
+\subsection{Application design}
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=1\textwidth]{appdesign.png}
+\end{figure}
+
+The user is suppose to enter the URL in the upper right text field and click the Click to check URL button from the bottom of the app.
+\newpage
+
+\section{Experimental data}
+The tests were made with JUnit for the important classes of the app.\\
+
+\vspace{10mm}
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=1\textwidth]{Screenshot (51).png}
+\end{figure}
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=1\textwidth]{Screenshot (52).png}
+\end{figure}
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=1\textwidth]{Screenshot (53).png}
+\end{figure}
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=1\textwidth]{Screenshot (54).png}
+\end{figure}
+
+\newpage
+
+\section{Conclusion}  
+Working at this application helped me gain more experience in JUnit, Java Swing and also it helped me understand how it works. I managed to make me study more on Java programming language and gain more codding ability experience.\\
+From my point of view, the program I implemented, as well as, the tools I used for this app, are correct and both compute the right answer.
+
+
+\vspace{10 mm}
+
+
+\begin{thebibliography}{9}
+
+	\bibitem{}
+	  \url{https://jsoup.org/?fbclid=IwAR1zWNpsbhz4iU2KzWYO5UomM0LUOIT3cZE5TbiDZYeVK17W9XCnwG4uxS8},
+     accessed in April 2020.
+     
+     \bibitem{}
+	  \url{geeksforgeeks.org/?fbclid=IwAR0Y2jkrkTRgwGEuLZxznVgZHwJybaqvFaUG1KKBTbiKxMk____rH1z7xb4},
+     accessed in April 2020.
+
+    \bibitem{}
+     \url{https://www.javatpoint.com/java-swing?fbclid=IwAR2nqA8PeQDXvupzmEpJNEm6pWlwcQI8Q5stKF688Nu3GtvNzJIRvQxBPdM},
+     accessed in April 2020.
+
+\end{thebibliography}
+
+\end{document}
+
